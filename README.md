@@ -47,7 +47,19 @@ uvicorn main:app --reload
 The API will be available at `http://127.0.0.1:8000`.
 You can view the interactive documentation at `http://127.0.0.1:8000/docs`.
 
+## Database
+The project uses SQLite for storage. The database file is located at `data/data.db`.
+- **Passwords** are stored as salted hashes using `bcrypt` (via `passlib`).
+- **Data folder** is ignored by git (see `.gitignore`).
+
+## Endpoints
+- `POST /auth/register`: Register a new user with email and password.
+- `POST /auth/login`: Authenticate and receive a token.
+
 ## Project Structure
 - `main.py`: Entry point of the FastAPI application.
-- `api/`: Contains the API route definitions.
-- `requirements.txt`: List of Python dependencies.
+- `database.py`: SQLAlchemy database configuration.
+- `models.py`: Database models (User).
+- `auth_utils.py`: Password hashing utilities.
+- `api/`: Route definitions.
+- `requirements.txt`: Python package dependencies.
