@@ -70,16 +70,19 @@ The project uses SQLite for storage. The database file is located at `data/data.
 
 #### 1. Fetch User List
 - **Endpoint**: `GET /users`
+- **Authentication**: Required (Bearer `authenticated_access_token`)
 - **Response**: Array of user objects including `id`, `email`, `role`, and `name`.
 
 #### 2. Update User Role
 - **Endpoint**: `PATCH /users/{id}/role`
+- **Authentication**: Required (Bearer `authenticated_access_token`)
 - **Body**: `{ "role": "admin" | "property_manager" | ... }`
 - **Response**: Updated user object.
 
 #### 3. Current User Role
 - **Endpoint**: `GET /auth/me`
-- **Response**: User object for the current session (currently returns the first user as a dummy).
+- **Authentication**: Required (Bearer `authenticated_access_token`)
+- **Response**: User object for the current session.
 
 ### Role Permissions (Frontend Planning)
 | Role | Access to User Management | Access to Site Management | Access to Tasks |

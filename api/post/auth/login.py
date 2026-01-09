@@ -20,7 +20,7 @@ async def login(user: UserAuth, db: Session = Depends(get_db)):
         "access_token": "authenticated_access_token", 
         "token_type": "bearer",
         "user": {
-            "id": db_user.id,
+            "id": str(db_user.id),
             "email": db_user.email,
             "name": db_user.name,
             "role": db_user.role
@@ -28,15 +28,10 @@ async def login(user: UserAuth, db: Session = Depends(get_db)):
     }
 
 @router.get("/me")
-async def get_me(db: Session = Depends(get_db)):
-    # For now, since we don't have JWT, we'll return the first user as a dummy 'me'
-    # or a 401 if no users exist. In production, this would use a token.
-    user = db.query(models.User).first()
-    if not user:
-        raise HTTPException(status_code=401, detail="Not authenticated")
+async def get_me(current_user: models.User = Depends(auth_utils.get_current_user)):
     return {
-        "id": user.id,
-        "email": user.email,
-        "name": user.name,
-        "role": user.role
+        "id": str(current_user.id),
+        "email": current_user.email,
+        "name": current_user.name,
+        "role": current_user.role
     }
