@@ -93,6 +93,22 @@ The project uses SQLite for storage. The database file is located at `data/data.
 | Technician | No | No | Yes |
 | Cleaning | No | No | Yes |
 
+# Sites & Tasks - API Documentation
+
+## Status: Implemented
+
+### Sites
+- **GET /sites**: List all sites. (Auth Required)
+- **GET /sites/{id}**: Get details for a specific site. (Auth Required)
+- **POST /sites**: Create a new site. (Auth Required)
+  - Body: `{ "name": "...", "address": "...", "coordinator": "..." }`
+
+### Tasks
+- **GET /tasks**: List all tasks. Supports filtering by `site_id` and `status`. (Auth Required)
+- **GET /tasks/{id}**: Get task details. (Auth Required)
+- **POST /tasks**: Create a new task. (Auth Required)
+  - Body: `{ "site_id": 1, "title": "...", "description": "...", "status": "TODO", "priority": "MEDIUM", "assignee": "...", "photos": [] }`
+
 ## Project Structure
 - `main.py`: Entry point of the FastAPI application.
 - `database.py`: SQLAlchemy database configuration.
