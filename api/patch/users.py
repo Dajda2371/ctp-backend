@@ -10,18 +10,6 @@ router = APIRouter()
 class RoleUpdate(BaseModel):
     role: str
 
-@router.get("/users")
-async def get_users(db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
-    users = db.query(models.User).all()
-    return [
-        {
-            "id": str(user.id),
-            "email": user.email,
-            "name": user.name,
-            "role": user.role
-        } for user in users
-    ]
-
 @router.patch("/users/{user_id}/role")
 async def update_user_role(user_id: int, role_update: RoleUpdate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
     db_user = db.query(models.User).filter(models.User.id == user_id).first()
