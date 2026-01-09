@@ -1,7 +1,8 @@
 import os
 import models
 from database import engine
-from fastapi import FastAPI, APIRoute
+from fastapi import FastAPI
+from fastapi.routing import APIRoute
 from fastapi.middleware.cors import CORSMiddleware
 from api.post.auth import login, register
 from api.post import sites as post_sites, tasks as post_tasks, users as post_users
