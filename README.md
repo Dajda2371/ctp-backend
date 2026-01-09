@@ -112,6 +112,9 @@ The project uses SQLite for storage. The database file is located at `data/data.
 - **GET /tasks/{id}**: Get task details. (Auth Required)
 - **POST /tasks**: Create a new task. (Auth Required)
   - Body: `{ "site_id": 1, "title": "...", "description": "...", "status": "TODO", "priority": "MEDIUM", "assignee": "...", "photos": [] }`
+- **PATCH /tasks/{id}**: Update task details. (Auth Required)
+  - Body: `{ "site_id": 1, "title": "...", "description": "...", "status": "...", "priority": "...", "assignee": "...", "photos": [] }` (All fields optional)
+- **DELETE /tasks/{id}**: Delete a task. (Auth Required)
 
 ## Project Structure
 - `main.py`: Entry point of the FastAPI application.
