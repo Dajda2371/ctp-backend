@@ -102,6 +102,10 @@ The project uses SQLite for storage. The database file is located at `data/data.
 - **GET /sites/{id}**: Get details for a specific site. (Auth Required)
 - **POST /sites**: Create a new site. (Auth Required)
   - Body: `{ "name": "...", "address": "...", "coordinator": "..." }`
+- **PATCH /sites/{id}**: Update site details. (Auth Required)
+  - Body: `{ "name": "...", "address": "...", "coordinator": "..." }` (All fields optional)
+- **DELETE /sites/{id}**: Delete a site. (Auth Required)
+  - Note: Site cannot be deleted if it has associated tasks.
 
 ### Tasks
 - **GET /tasks**: List all tasks. Supports filtering by `site_id` and `status`. (Auth Required)
