@@ -1,7 +1,7 @@
 import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from api.options.auth import login
+from api.post.auth import login
 
 app = FastAPI()
 
