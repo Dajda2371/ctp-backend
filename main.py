@@ -4,6 +4,7 @@ from database import engine
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from api.post.auth import login
+from api import user_management
 
 # Create the database tables
 models.Base.metadata.create_all(bind=engine)
@@ -18,3 +19,4 @@ app.add_middleware(
 )
 
 app.include_router(login.router, prefix="/auth")
+app.include_router(user_management.router)

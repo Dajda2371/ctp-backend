@@ -55,6 +55,40 @@ The project uses SQLite for storage. The database file is located at `data/data.
 ## Endpoints
 - `POST /auth/register`: Register a new user with email and password.
 - `POST /auth/login`: Authenticate and receive a token.
+# User Management & Roles - API Documentation
+
+## Status: Implemented
+
+### Roles Supported
+- `admin`
+- `property_manager`
+- `facility_manager`
+- `technician`
+- `cleaning`
+
+### API Endpoints
+
+#### 1. Fetch User List
+- **Endpoint**: `GET /users`
+- **Response**: Array of user objects including `id`, `email`, `role`, and `name`.
+
+#### 2. Update User Role
+- **Endpoint**: `PATCH /users/{id}/role`
+- **Body**: `{ "role": "admin" | "property_manager" | ... }`
+- **Response**: Updated user object.
+
+#### 3. Current User Role
+- **Endpoint**: `GET /auth/me`
+- **Response**: User object for the current session (currently returns the first user as a dummy).
+
+### Role Permissions (Frontend Planning)
+| Role | Access to User Management | Access to Site Management | Access to Tasks |
+| :--- | :--- | :--- | :--- |
+| Admin | Yes | Yes | Yes |
+| Property Manager | No | Yes | Yes |
+| Facility Manager | No | Yes | Yes |
+| Technician | No | No | Yes |
+| Cleaning | No | No | Yes |
 
 ## Project Structure
 - `main.py`: Entry point of the FastAPI application.
