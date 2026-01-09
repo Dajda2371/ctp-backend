@@ -70,8 +70,18 @@ The project uses SQLite for storage. The database file is located at `data/data.
 
 #### 1. Fetch User List
 - **Endpoint**: `GET /users`
-- **Authentication**: Required (Bearer `authenticated_access_token`)
-- **Response**: Array of user objects including `id`, `email`, `role`, and `name`.
+- **Authentication**: Required (Bearer `token`)
+- **Response**: Array of user objects.
+
+#### 2. Get User Details
+- **Endpoint**: `GET /users/{id}`
+- **Authentication**: Required (Bearer `token`)
+- **Response**: User object including `id`, `email`, `role`, and `name`.
+
+#### 3. Get User Role
+- **Endpoint**: `GET /users/{id}/role`
+- **Authentication**: Required (Bearer `token`)
+- **Response**: `{ "role": "..." }`
 
 #### 2. Update User Role
 - **Endpoint**: `PATCH /users/{id}/role`
