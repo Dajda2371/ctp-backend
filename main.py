@@ -1,6 +1,6 @@
 import os
 from fastapi import FastAPI
-from api.post.auth import login
+from api.options.auth import login
 
 app = FastAPI()
 

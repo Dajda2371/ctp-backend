@@ -8,7 +8,7 @@ class UserLogin(BaseModel):
     email: str
     password: str
 
-@router.post("/login")
+@router.options("/login")
 async def login(user: UserLogin):
     # For now, just return a dummy token.
     # Authentication logic will be implemented later.
