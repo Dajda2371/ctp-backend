@@ -16,8 +16,10 @@ async def login(user: UserAuth, db: Session = Depends(get_db)):
             detail="Incorrect email or password",
         )
     
+    access_token = auth_utils.create_access_token(data={"sub": db_user.email})
+    
     return {
-        "access_token": "authenticated_access_token", 
+        "access_token": access_token, 
         "token_type": "bearer",
         "user": {
             "id": str(db_user.id),
