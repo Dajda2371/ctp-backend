@@ -125,31 +125,41 @@ async def log_requests(request: Request, call_next):
     async for chunk in response.body_iterator:
         response_body += chunk
     
-    # Log Request Line (re-implementing uvicorn style)
+    # Define colors
+    COLOR_RESET = "\033[0m"
+    COLOR_METHOD = "\033[94m"  # Blue
+    COLOR_PATH = "\033[97m"    # White
+    
+    status_code = response.status_code
+    if status_code < 300:
+        COLOR_STATUS = "\033[92m"  # Green
+    elif status_code < 400:
+        COLOR_STATUS = "\033[93m"  # Yellow
+    else:
+        COLOR_STATUS = "\033[91m"  # Red
+
+    # Log Request Line
     try:
-        status_phrase = http.HTTPStatus(response.status_code).phrase
+        status_phrase = http.HTTPStatus(status_code).phrase
     except ValueError:
         status_phrase = ""
     
     client_host = request.client.host if request.client else "unknown"
     client_port = request.client.port if request.client else "0"
     
-    # Use the full path with query string if it exists
-    full_path = str(request.url)
-    # request.url is the full URL, we just want the path + query relative to origin
     relative_path = request.url.path
     if request.url.query:
         relative_path += f"?{request.url.query}"
     
-    logger.info(f"{client_host}:{client_port} - \"{request.method} {relative_path} HTTP/{request.scope.get('http_version', '1.1')}\" {response.status_code} {status_phrase}")
+    logger.info(f"{client_host}:{client_port} - \"{COLOR_METHOD}{request.method}{COLOR_RESET} {COLOR_PATH}{relative_path}{COLOR_RESET} HTTP/{request.scope.get('http_version', '1.1')}\" {COLOR_STATUS}{status_code} {status_phrase}{COLOR_RESET}")
 
-    # Log Request Body
-    if body:
-        logger.info(f"{body.decode('utf-8', errors='ignore')}")
+    # Log Request Body (always log, even if empty)
+    request_body_str = body.decode('utf-8', errors='ignore') if body else "<no request body>"
+    logger.info(f"{request_body_str}")
     
     # Log Response Body
-    if response_body:
-        logger.info(f"Response Body: {response_body.decode('utf-8', errors='ignore')}")
+    response_body_str = response_body.decode('utf-8', errors='ignore') if response_body else "<no response body>"
+    logger.info(f"Response Body: {response_body_str}")
     
     # Since we consumed the response body, we must return a new response object
     return Response(
@@ -181,12 +191,12 @@ app.include_router(get_me.router, prefix="/auth")
 app.include_router(change_password.router, prefix="/auth")
 app.include_router(logout.router, prefix="/auth")
 app.include_router(get_users.router)
+app.include_router(get_users_possible_fm.router)
+app.include_router(get_users_possible_pm.router)
 app.include_router(get_users_id.router)
 app.include_router(get_users_id_email.router)
 app.include_router(get_users_id_name.router)
 app.include_router(get_users_id_role.router)
-app.include_router(get_users_possible_fm.router)
-app.include_router(get_users_possible_pm.router)
 
 app.include_router(get_sites.router)
 app.include_router(get_sites_id.router)
