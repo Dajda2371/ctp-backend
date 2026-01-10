@@ -31,6 +31,7 @@ async def get_tasks(
             "priority": task.priority,
             "assignee": task.assignee,
             "created_at": task.created_at,
+            "due_date": task.due_date,
             "photos": task.photos
         } for task in tasks
     ]
@@ -49,5 +50,6 @@ async def get_task(task_id: int, db: Session = Depends(get_db), current_user: mo
         "priority": task.priority,
         "assignee": task.assignee,
         "created_at": task.created_at,
+        "due_date": task.due_date,
         "photos": task.photos
     }

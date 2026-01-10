@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
+from datetime import datetime
 from sqlalchemy.orm import Session
 from database import get_db
 import models
@@ -15,6 +16,7 @@ class TaskCreate(BaseModel):
     status: Optional[str] = "TODO"
     priority: Optional[str] = "MEDIUM"
     assignee: Optional[str] = None
+    due_date: Optional[datetime] = None
     photos: Optional[List[str]] = []
 
 @router.post("/tasks")
@@ -31,6 +33,7 @@ async def create_task(task: TaskCreate, db: Session = Depends(get_db), current_u
         status=task.status,
         priority=task.priority,
         assignee=task.assignee,
+        due_date=task.due_date,
         photos=task.photos
     )
     db.add(new_task)
@@ -45,5 +48,6 @@ async def create_task(task: TaskCreate, db: Session = Depends(get_db), current_u
         "priority": new_task.priority,
         "assignee": new_task.assignee,
         "created_at": new_task.created_at,
+        "due_date": new_task.due_date,
         "photos": new_task.photos
     }

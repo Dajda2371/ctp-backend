@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
+from datetime import datetime
 from sqlalchemy.orm import Session
 from database import get_db
 import models
@@ -15,6 +16,7 @@ class TaskUpdate(BaseModel):
     status: Optional[str] = None
     priority: Optional[str] = None
     assignee: Optional[str] = None
+    due_date: Optional[datetime] = None
     photos: Optional[List[str]] = None
 
 @router.patch("/tasks/{task_id}")
@@ -51,5 +53,6 @@ async def update_task(
         "priority": db_task.priority,
         "assignee": db_task.assignee,
         "created_at": db_task.created_at,
+        "due_date": db_task.due_date,
         "photos": db_task.photos
     }
