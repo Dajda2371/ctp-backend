@@ -83,10 +83,22 @@ The project uses SQLite for storage. The database file is located at `data/data.
 - **Authentication**: Required (Bearer `token`)
 - **Response**: `{ "role": "..." }`
 
-#### 2. Update User Role
-- **Endpoint**: `PATCH /users/{id}/role`
-- **Authentication**: Required (Bearer `authenticated_access_token`)
+#### 4. Update User Role
+- **Endpoint**: `PUT /users/{id}/role`
+- **Authentication**: Required (Bearer `token`)
 - **Body**: `{ "role": "admin" | "property_manager" | ... }`
+- **Response**: Updated user object.
+
+#### 5. Update User Name
+- **Endpoint**: `PUT /users/{id}/name`
+- **Authentication**: Required (Bearer `token`)
+- **Body**: `{ "name": "..." }`
+- **Response**: Updated user object.
+
+#### 6. Update User Email
+- **Endpoint**: `PUT /users/{id}/email`
+- **Authentication**: Required (Bearer `token`)
+- **Body**: `{ "email": "..." }`
 - **Response**: Updated user object.
 
 #### 3. Current User Role

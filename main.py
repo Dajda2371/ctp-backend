@@ -9,6 +9,7 @@ from api.post import sites as post_sites, tasks as post_tasks, users as post_use
 from api.get import users as get_users, sites as get_sites, tasks as get_tasks
 from api.patch import users as patch_users, sites as patch_sites, tasks as patch_tasks
 from api.delete import sites as delete_sites, tasks as delete_tasks, users as delete_users
+from api.put import users as put_users
 
 app = FastAPI()
 
@@ -53,3 +54,4 @@ app.include_router(patch_tasks.router)
 app.include_router(delete_sites.router)
 app.include_router(delete_tasks.router)
 app.include_router(delete_users.router)
+app.include_router(put_users.router)

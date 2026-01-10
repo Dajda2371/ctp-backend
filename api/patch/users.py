@@ -13,8 +13,7 @@ class UserUpdate(BaseModel):
     email: Optional[str] = None
     role: Optional[str] = None
 
-class RoleUpdate(BaseModel):
-    role: str
+
 
 @router.patch("/users/{user_id}")
 async def update_user(
@@ -52,11 +51,4 @@ async def update_user(
         "role": db_user.role
     }
 
-@router.patch("/users/{user_id}/role")
-async def update_user_role(
-    user_id: int, 
-    role_update: RoleUpdate, 
-    db: Session = Depends(get_db), 
-    current_user: models.User = Depends(get_current_user)
-):
-    return await update_user(user_id, UserUpdate(role=role_update.role), db, current_user)
+
