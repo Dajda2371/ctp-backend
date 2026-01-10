@@ -4,7 +4,7 @@ from database import engine
 from fastapi import FastAPI
 from fastapi.routing import APIRoute
 from fastapi.middleware.cors import CORSMiddleware
-from api.post.auth import login, register
+from api.post.auth import login, register, me
 from api.post import sites as post_sites, tasks as post_tasks, users as post_users
 from api.get import users as get_users, sites as get_sites, tasks as get_tasks
 from api.patch import users as patch_users, sites as patch_sites, tasks as patch_tasks
@@ -40,6 +40,7 @@ app.add_middleware(
 
 app.include_router(login.router, prefix="/auth")
 app.include_router(register.router, prefix="/auth")
+app.include_router(me.router, prefix="/auth")
 app.include_router(get_users.router)
 app.include_router(get_sites.router)
 app.include_router(get_tasks.router)
