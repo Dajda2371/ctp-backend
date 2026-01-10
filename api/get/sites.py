@@ -66,3 +66,14 @@ async def get_site_facility_manager(site_id: int, db: Session = Depends(get_db),
 
 @router.get("/sites/{site_id}/name")
 async def get_site_name(site_id: int, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    site = db.query(models.Site).filter(models.Site.id == site_id).first()
+    if not site:
+        raise HTTPException(status_code=404, detail="Site not found")
+    return {"name": site.name}
+
+@router.get("/sites/{site_id}/address")
+async def get_site_address(site_id: int, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    site = db.query(models.Site).filter(models.Site.id == site_id).first()
+    if not site:
+        raise HTTPException(status_code=404, detail="Site not found")
+    return {"address": site.address}
