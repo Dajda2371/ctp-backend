@@ -17,7 +17,7 @@ class TaskCreate(BaseModel):
     priority: Optional[int] = 3
     assignee: Optional[str] = None
     due_date: Optional[datetime] = None
-    photos: Optional[List[str]] = []
+    photos: Optional[List[str]] = None
 
 @router.post("/tasks")
 async def create_task(task: TaskCreate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
