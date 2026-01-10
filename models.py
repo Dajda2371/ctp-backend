@@ -37,3 +37,8 @@ class Task(Base):
     photos = Column(JSON, default=[])
 
     site = relationship("Site", back_populates="tasks")
+
+class BlacklistedToken(Base):
+    __tablename__ = "blacklisted_tokens"
+    token = Column(String, primary_key=True, index=True)
+    blacklisted_at = Column(DateTime, default=datetime.utcnow)

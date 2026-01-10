@@ -56,6 +56,7 @@ The project uses SQLite for storage. The database file is located at `data/data.
 - `POST /auth/register`: Register a new user with email and password.
 - `POST /auth/login`: Authenticate and receive a token.
 - `POST /auth/change`: Change password (requires authentication).
+- `POST /auth/logout`: Revoke the current access token.
 # User Management & Roles - API Documentation
 
 ## Status: Implemented
@@ -122,6 +123,11 @@ The project uses SQLite for storage. The database file is located at `data/data.
 - **Authentication**: Required (Bearer `token`)
 - **Body**: `{ "old_password": "...", "new_password": "..." }`
 - **Response**: `{ "message": "Password changed successfully" }`
+
+#### 11. Logout
+- **Endpoint**: `POST /auth/logout`
+- **Authentication**: Required (Bearer `token`)
+- **Response**: `{ "message": "Successfully logged out" }`
 
 ### Role Permissions (Frontend Planning)
 | Role | Access to User Management | Access to Site Management | Access to Tasks |
