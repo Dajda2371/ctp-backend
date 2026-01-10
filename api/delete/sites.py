@@ -16,10 +16,8 @@ async def delete_site(
     if not db_site:
         raise HTTPException(status_code=404, detail="Site not found")
     
-    # Check if there are associated tasks
-    tasks_count = db.query(models.Task).filter(models.Task.site_id == site_id).count()
-    if tasks_count > 0:
-        raise HTTPException(status_code=400, detail="Cannot delete site with associated tasks. Delete tasks first.")
+    # Delete associated tasks
+    db.query(models.Task).filter(models.Task.site_id == site_id).delete()
     
     db.delete(db_site)
     db.commit()
