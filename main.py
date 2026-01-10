@@ -1,4 +1,5 @@
 import os
+import http
 import models
 from database import engine
 from fastapi import FastAPI, Request
@@ -103,12 +104,13 @@ app.openapi = custom_openapi
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# Silence uvicorn access logger to avoid duplicates
+logging.getLogger("uvicorn.access").setLevel(logging.WARNING)
+
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
     # Log Request Body
     body = await request.body()
-    if body:
-        logger.info(f"Request Body: {body.decode('utf-8', errors='ignore')}")
     
     # Replace the receive function so following handlers can read the body again
     async def receive():
@@ -123,6 +125,29 @@ async def log_requests(request: Request, call_next):
     async for chunk in response.body_iterator:
         response_body += chunk
     
+    # Log Request Line (re-implementing uvicorn style)
+    try:
+        status_phrase = http.HTTPStatus(response.status_code).phrase
+    except ValueError:
+        status_phrase = ""
+    
+    client_host = request.client.host if request.client else "unknown"
+    client_port = request.client.port if request.client else "0"
+    
+    # Use the full path with query string if it exists
+    full_path = str(request.url)
+    # request.url is the full URL, we just want the path + query relative to origin
+    relative_path = request.url.path
+    if request.url.query:
+        relative_path += f"?{request.url.query}"
+    
+    logger.info(f"{client_host}:{client_port} - \"{request.method} {relative_path} HTTP/{request.scope.get('http_version', '1.1')}\" {response.status_code} {status_phrase}")
+
+    # Log Request Body
+    if body:
+        logger.info(f"{body.decode('utf-8', errors='ignore')}")
+    
+    # Log Response Body
     if response_body:
         logger.info(f"Response Body: {response_body.decode('utf-8', errors='ignore')}")
     
