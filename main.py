@@ -21,6 +21,7 @@ from api.get.sites.site_id import name as get_sites_id_name, address as get_site
 from api.get.users import user_id as get_users_id_pkg
 from api.get.users.user_id import get_user as get_users_id
 from api.get.users.user_id import email as get_users_id_email, name as get_users_id_name, role as get_users_id_role
+from api.get.users import possible_facility_managers as get_users_possible_fm, possible_property_managers as get_users_possible_pm
 
 from api.post import sites as post_sites, tasks as post_tasks, users as post_users
 from api.post.auth import login, register, change_password, logout
@@ -122,6 +123,8 @@ app.include_router(get_users_id.router)
 app.include_router(get_users_id_email.router)
 app.include_router(get_users_id_name.router)
 app.include_router(get_users_id_role.router)
+app.include_router(get_users_possible_fm.router)
+app.include_router(get_users_possible_pm.router)
 
 app.include_router(get_sites.router)
 app.include_router(get_sites_id.router)
