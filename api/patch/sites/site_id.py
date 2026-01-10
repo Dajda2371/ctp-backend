@@ -49,14 +49,29 @@ async def update_site(
         setattr(db_site, key, value)
     
     db.commit()
-    db.refresh(db_site)
+    
+    from sqlalchemy.orm import aliased
+    PM = aliased(models.User)
+    FM = aliased(models.User)
+    
+    result = db.query(
+        models.Site,
+        PM.name.label("pm_name"),
+        FM.name.label("fm_name")
+    ).outerjoin(PM, models.Site.property_manager == PM.id)\
+     .outerjoin(FM, models.Site.facility_manager == FM.id)\
+     .filter(models.Site.id == site_id).first()
+     
+    site, pm_name, fm_name = result
     
     return {
-        "id": str(db_site.id),
-        "name": db_site.name,
-        "address": db_site.address,
-        "latitude": db_site.latitude,
-        "longitude": db_site.longitude,
-        "property_manager": db_site.property_manager,
-        "facility_manager": db_site.facility_manager
+        "id": site.id,
+        "name": site.name,
+        "address": site.address,
+        "latitude": site.latitude,
+        "longitude": site.longitude,
+        "property_manager": site.property_manager,
+        "property_manager_name": pm_name,
+        "facility_manager": site.facility_manager,
+        "facility_manager_name": fm_name
     }

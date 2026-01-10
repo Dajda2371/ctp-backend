@@ -44,11 +44,13 @@ async def create_site(site: SiteCreate, db: Session = Depends(get_db), current_u
     db.commit()
     db.refresh(new_site)
     return {
-        "id": str(new_site.id),
+        "id": new_site.id,
         "name": new_site.name,
         "address": new_site.address,
         "latitude": new_site.latitude,
         "longitude": new_site.longitude,
         "property_manager": new_site.property_manager,
-        "facility_manager": new_site.facility_manager
+        "property_manager_name": pm.name,
+        "facility_manager": new_site.facility_manager,
+        "facility_manager_name": fm.name
     }
