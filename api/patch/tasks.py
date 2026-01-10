@@ -14,7 +14,7 @@ class TaskUpdate(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
     status: Optional[str] = None
-    priority: Optional[str] = None
+    priority: Optional[int] = None
     assignee: Optional[str] = None
     due_date: Optional[datetime] = None
     photos: Optional[List[str]] = None
@@ -37,6 +37,10 @@ async def update_task(
         site = db.query(models.Site).filter(models.Site.id == update_data["site_id"]).first()
         if not site:
             raise HTTPException(status_code=404, detail="Site not found")
+    
+    if "priority" in update_data:
+        if update_data["priority"] < 1 or update_data["priority"] > 5:
+            raise HTTPException(status_code=400, detail="Priority must be between 1 and 5")
             
     for key, value in update_data.items():
         setattr(db_task, key, value)

@@ -121,9 +121,10 @@ The project uses SQLite for storage. The database file is located at `data/data.
 - **GET /tasks**: List all tasks. Supports filtering by `site_id` and `status`. (Auth Required)
 - **GET /tasks/{id}**: Get task details. (Auth Required)
 - **POST /tasks**: Create a new task. (Auth Required)
-  - Body: `{ "site_id": 1, "title": "...", "description": "...", "status": "TODO", "priority": "MEDIUM", "assignee": "...", "due_date": "ISO-DATE", "photos": [] }`
+  - Body: `{ "site_id": 1, "title": "...", "description": "...", "status": "TODO", "priority": 3, "assignee": "...", "due_date": "ISO-DATE", "photos": [] }`
+    - *Note: Priority is an integer from 1 (lowest) to 5 (highest).*
 - **PATCH /tasks/{id}**: Update task details. (Auth Required)
-  - Body: `{ "site_id": 1, "title": "...", "description": "...", "status": "...", "priority": "...", "assignee": "...", "due_date": "ISO-DATE", "photos": [] }` (All fields optional)
+  - Body: `{ "site_id": 1, "title": "...", "description": "...", "status": "...", "priority": 3, "assignee": "...", "due_date": "ISO-DATE", "photos": [] }` (All fields optional)
 - **DELETE /tasks/{id}**: Delete a task. (Auth Required)
 
 ## Project Structure

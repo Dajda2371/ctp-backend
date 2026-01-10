@@ -14,7 +14,7 @@ class TaskCreate(BaseModel):
     title: str
     description: Optional[str] = None
     status: Optional[str] = "TODO"
-    priority: Optional[str] = "MEDIUM"
+    priority: Optional[int] = 3
     assignee: Optional[str] = None
     due_date: Optional[datetime] = None
     photos: Optional[List[str]] = []
@@ -25,6 +25,9 @@ async def create_task(task: TaskCreate, db: Session = Depends(get_db), current_u
     site = db.query(models.Site).filter(models.Site.id == task.site_id).first()
     if not site:
         raise HTTPException(status_code=404, detail="Site not found")
+        
+    if task.priority and (task.priority < 1 or task.priority > 5):
+        raise HTTPException(status_code=400, detail="Priority must be between 1 and 5")
         
     new_task = models.Task(
         site_id=task.site_id,

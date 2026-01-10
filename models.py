@@ -30,7 +30,7 @@ class Task(Base):
     title = Column(String, nullable=False)
     description = Column(String)
     status = Column(String, default="TODO") # TODO, IN_PROGRESS, DONE, BLOCKED
-    priority = Column(String, default="MEDIUM") # LOW, MEDIUM, HIGH, CRITICAL
+    priority = Column(Integer, default=3) # 1 to 5, default 3
     assignee = Column(String) # For now, simple string or FK to users.name
     created_at = Column(DateTime, default=datetime.utcnow)
     due_date = Column(DateTime, nullable=True)
