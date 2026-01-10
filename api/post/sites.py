@@ -4,16 +4,16 @@ from database import get_db
 import models
 from pydantic import BaseModel
 from auth_utils import get_current_user
-from typing import Literal, Optional
+from typing import Literal
 
 router = APIRouter()
 
 class SiteCreate(BaseModel):
     name: str
     address: str
-    latitude: Optional[float] = None
-    longitude: Optional[float] = None
-    coordinator: Optional[Literal["admin", "property_manager", "facility_manager"]] = None
+    latitude: float
+    longitude: float
+    coordinator: Literal["admin", "property_manager", "facility_manager"]
 
 @router.post("/sites")
 async def create_site(site: SiteCreate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
