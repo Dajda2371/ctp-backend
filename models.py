@@ -20,7 +20,8 @@ class Site(Base):
     address = Column(String, nullable=False)
     latitude = Column(Float, nullable=True)
     longitude = Column(Float, nullable=True)
-    coordinator = Column(String)
+    property_manager = Column(String)
+    facility_manager = Column(String)
 
     tasks = relationship("Task", back_populates="site")
 

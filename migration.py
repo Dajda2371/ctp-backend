@@ -41,6 +41,14 @@ def migrate_db():
         if "longitude" not in columns:
             print("Migrating: Adding longitude column to sites table")
             cursor.execute("ALTER TABLE sites ADD COLUMN longitude FLOAT")
+
+        if "property_manager" not in columns:
+            print("Migrating: Adding property_manager column to sites table")
+            cursor.execute("ALTER TABLE sites ADD COLUMN property_manager TEXT")
+
+        if "facility_manager" not in columns:
+            print("Migrating: Adding facility_manager column to sites table")
+            cursor.execute("ALTER TABLE sites ADD COLUMN facility_manager TEXT")
             
         conn.commit()
     except Exception as e:

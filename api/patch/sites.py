@@ -13,7 +13,8 @@ class SiteUpdate(BaseModel):
     address: Optional[str] = None
     latitude: Optional[float] = None
     longitude: Optional[float] = None
-    coordinator: Optional[Literal["admin", "property_manager", "facility_manager"]] = None
+    property_manager: Optional[str] = None
+    facility_manager: Optional[str] = None
 
 @router.patch("/sites/{site_id}")
 async def update_site(
@@ -27,6 +28,23 @@ async def update_site(
         raise HTTPException(status_code=404, detail="Site not found")
     
     update_data = site_update.dict(exclude_unset=True)
+    
+    # Validate property_manager if provided
+    if "property_manager" in update_data:
+        pm = db.query(models.User).filter(models.User.email == update_data["property_manager"]).first()
+        if not pm:
+            raise HTTPException(status_code=404, detail=f"Property Manager with email {update_data['property_manager']} not found")
+        if pm.role != "property_manager":
+            raise HTTPException(status_code=400, detail=f"User {update_data['property_manager']} does not have the property_manager role")
+
+    # Validate facility_manager if provided
+    if "facility_manager" in update_data:
+        fm = db.query(models.User).filter(models.User.email == update_data["facility_manager"]).first()
+        if not fm:
+            raise HTTPException(status_code=404, detail=f"Facility Manager with email {update_data['facility_manager']} not found")
+        if fm.role != "facility_manager":
+            raise HTTPException(status_code=400, detail=f"User {update_data['facility_manager']} does not have the facility_manager role")
+
     for key, value in update_data.items():
         setattr(db_site, key, value)
     
@@ -39,5 +57,6 @@ async def update_site(
         "address": db_site.address,
         "latitude": db_site.latitude,
         "longitude": db_site.longitude,
-        "coordinator": db_site.coordinator
+        "property_manager": db_site.property_manager,
+        "facility_manager": db_site.facility_manager
     }

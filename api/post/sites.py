@@ -13,16 +13,32 @@ class SiteCreate(BaseModel):
     address: str
     latitude: float
     longitude: float
-    coordinator: Literal["admin", "property_manager", "facility_manager"]
+    property_manager: str  # Email
+    facility_manager: str  # Email
 
 @router.post("/sites")
 async def create_site(site: SiteCreate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    # Validate property_manager exists and has the correct role
+    pm = db.query(models.User).filter(models.User.email == site.property_manager).first()
+    if not pm:
+        raise HTTPException(status_code=404, detail=f"Property Manager with email {site.property_manager} not found")
+    if pm.role != "property_manager":
+        raise HTTPException(status_code=400, detail=f"User {site.property_manager} does not have the property_manager role")
+
+    # Validate facility_manager exists and has the correct role
+    fm = db.query(models.User).filter(models.User.email == site.facility_manager).first()
+    if not fm:
+        raise HTTPException(status_code=404, detail=f"Facility Manager with email {site.facility_manager} not found")
+    if fm.role != "facility_manager":
+        raise HTTPException(status_code=400, detail=f"User {site.facility_manager} does not have the facility_manager role")
+
     new_site = models.Site(
         name=site.name,
         address=site.address,
         latitude=site.latitude,
         longitude=site.longitude,
-        coordinator=site.coordinator
+        property_manager=site.property_manager,
+        facility_manager=site.facility_manager
     )
     db.add(new_site)
     db.commit()
@@ -33,5 +49,6 @@ async def create_site(site: SiteCreate, db: Session = Depends(get_db), current_u
         "address": new_site.address,
         "latitude": new_site.latitude,
         "longitude": new_site.longitude,
-        "coordinator": new_site.coordinator
+        "property_manager": new_site.property_manager,
+        "facility_manager": new_site.facility_manager
     }

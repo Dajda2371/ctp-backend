@@ -16,7 +16,8 @@ async def get_sites(db: Session = Depends(get_db), current_user: models.User = D
             "address": site.address,
             "latitude": site.latitude,
             "longitude": site.longitude,
-            "coordinator": site.coordinator
+            "property_manager": site.property_manager,
+            "facility_manager": site.facility_manager
         } for site in sites
     ]
 
@@ -31,7 +32,8 @@ async def get_site(site_id: int, db: Session = Depends(get_db), current_user: mo
         "address": site.address,
         "latitude": site.latitude,
         "longitude": site.longitude,
-        "coordinator": site.coordinator
+        "property_manager": site.property_manager,
+        "facility_manager": site.facility_manager
     }
 
 @router.get("/sites/{site_id}/latitude")
@@ -48,23 +50,19 @@ async def get_site_longitude(site_id: int, db: Session = Depends(get_db), curren
         raise HTTPException(status_code=404, detail="Site not found")
     return {"longitude": site.longitude}
 
+@router.get("/sites/{site_id}/property_manager")
+async def get_site_property_manager(site_id: int, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    site = db.query(models.Site).filter(models.Site.id == site_id).first()
+    if not site:
+        raise HTTPException(status_code=404, detail="Site not found")
+    return {"property_manager": site.property_manager}
+
+@router.get("/sites/{site_id}/facility_manager")
+async def get_site_facility_manager(site_id: int, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    site = db.query(models.Site).filter(models.Site.id == site_id).first()
+    if not site:
+        raise HTTPException(status_code=404, detail="Site not found")
+    return {"facility_manager": site.facility_manager}
+
 @router.get("/sites/{site_id}/name")
 async def get_site_name(site_id: int, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
-    site = db.query(models.Site).filter(models.Site.id == site_id).first()
-    if not site:
-        raise HTTPException(status_code=404, detail="Site not found")
-    return {"name": site.name}
-
-@router.get("/sites/{site_id}/address")
-async def get_site_address(site_id: int, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
-    site = db.query(models.Site).filter(models.Site.id == site_id).first()
-    if not site:
-        raise HTTPException(status_code=404, detail="Site not found")
-    return {"address": site.address}
-
-@router.get("/sites/{site_id}/coordinator")
-async def get_site_coordinator(site_id: int, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
-    site = db.query(models.Site).filter(models.Site.id == site_id).first()
-    if not site:
-        raise HTTPException(status_code=404, detail="Site not found")
-    return {"coordinator": site.coordinator}
