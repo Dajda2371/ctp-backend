@@ -17,6 +17,12 @@ class SiteAddressUpdate(BaseModel):
 class SiteCoordinatorUpdate(BaseModel):
     coordinator: Optional[Literal["admin", "property_manager", "facility_manager"]] = None
 
+class SiteLatitudeUpdate(BaseModel):
+    latitude: float
+
+class SiteLongitudeUpdate(BaseModel):
+    longitude: float
+
 @router.put("/sites/{site_id}/name")
 async def update_site_name(site_id: int, name_update: SiteNameUpdate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
     db_site = db.query(models.Site).filter(models.Site.id == site_id).first()
@@ -46,6 +52,28 @@ async def update_site_coordinator(site_id: int, coordinator_update: SiteCoordina
         raise HTTPException(status_code=404, detail="Site not found")
     
     db_site.coordinator = coordinator_update.coordinator
+    db.commit()
+    db.refresh(db_site)
+    return db_site
+
+@router.put("/sites/{site_id}/latitude")
+async def update_site_latitude(site_id: int, lat_update: SiteLatitudeUpdate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    db_site = db.query(models.Site).filter(models.Site.id == site_id).first()
+    if not db_site:
+        raise HTTPException(status_code=404, detail="Site not found")
+    
+    db_site.latitude = lat_update.latitude
+    db.commit()
+    db.refresh(db_site)
+    return db_site
+
+@router.put("/sites/{site_id}/longitude")
+async def update_site_longitude(site_id: int, lon_update: SiteLongitudeUpdate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    db_site = db.query(models.Site).filter(models.Site.id == site_id).first()
+    if not db_site:
+        raise HTTPException(status_code=404, detail="Site not found")
+    
+    db_site.longitude = lon_update.longitude
     db.commit()
     db.refresh(db_site)
     return db_site

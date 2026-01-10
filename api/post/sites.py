@@ -11,6 +11,8 @@ router = APIRouter()
 class SiteCreate(BaseModel):
     name: str
     address: str
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
     coordinator: Optional[Literal["admin", "property_manager", "facility_manager"]] = None
 
 @router.post("/sites")
@@ -18,6 +20,8 @@ async def create_site(site: SiteCreate, db: Session = Depends(get_db), current_u
     new_site = models.Site(
         name=site.name,
         address=site.address,
+        latitude=site.latitude,
+        longitude=site.longitude,
         coordinator=site.coordinator
     )
     db.add(new_site)
@@ -27,5 +31,7 @@ async def create_site(site: SiteCreate, db: Session = Depends(get_db), current_u
         "id": str(new_site.id),
         "name": new_site.name,
         "address": new_site.address,
+        "latitude": new_site.latitude,
+        "longitude": new_site.longitude,
         "coordinator": new_site.coordinator
     }

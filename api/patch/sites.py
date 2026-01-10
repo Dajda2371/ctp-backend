@@ -11,6 +11,8 @@ router = APIRouter()
 class SiteUpdate(BaseModel):
     name: Optional[str] = None
     address: Optional[str] = None
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
     coordinator: Optional[Literal["admin", "property_manager", "facility_manager"]] = None
 
 @router.patch("/sites/{site_id}")
@@ -35,5 +37,7 @@ async def update_site(
         "id": str(db_site.id),
         "name": db_site.name,
         "address": db_site.address,
+        "latitude": db_site.latitude,
+        "longitude": db_site.longitude,
         "coordinator": db_site.coordinator
     }

@@ -22,6 +22,18 @@ def migrate_db():
             print("Migrating: Adding photos column to tasks table")
             cursor.execute("ALTER TABLE tasks ADD COLUMN photos JSON DEFAULT '[]'")
             
+        # Migrate sites table
+        cursor.execute("PRAGMA table_info(sites)")
+        columns = [info[1] for info in cursor.fetchall()]
+        
+        if "latitude" not in columns:
+            print("Migrating: Adding latitude column to sites table")
+            cursor.execute("ALTER TABLE sites ADD COLUMN latitude FLOAT")
+            
+        if "longitude" not in columns:
+            print("Migrating: Adding longitude column to sites table")
+            cursor.execute("ALTER TABLE sites ADD COLUMN longitude FLOAT")
+            
         conn.commit()
     except Exception as e:
         print(f"Migration error: {e}")
