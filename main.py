@@ -11,6 +11,7 @@ from api.get import users as get_users, sites as get_sites, tasks as get_tasks
 from api.get.tasks import task_id as get_tasks_id_pkg
 from api.get.tasks.task_id import get_task as get_tasks_id
 from api.get.tasks.task_id import site_id as get_tasks_id_site, title as get_tasks_id_title, description as get_tasks_id_description, status as get_tasks_id_status, priority as get_tasks_id_priority, assignee as get_tasks_id_assignee, due_date as get_tasks_id_due_date, photos as get_tasks_id_photos
+from api.get.tasks.task_id.photos import photo_index as get_tasks_id_photos_item
 from api.get.auth import me as get_me
 
 from api.post import sites as post_sites, tasks as post_tasks, users as post_users
@@ -114,6 +115,7 @@ app.include_router(get_tasks_id_priority.router)
 app.include_router(get_tasks_id_assignee.router)
 app.include_router(get_tasks_id_due_date.router)
 app.include_router(get_tasks_id_photos.router)
+app.include_router(get_tasks_id_photos_item.router)
 app.include_router(post_sites.router)
 app.include_router(post_tasks.router)
 app.include_router(post_tasks_id_photos.router)
