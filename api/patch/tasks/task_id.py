@@ -60,4 +60,3 @@ async def update_task(
         "due_date": db_task.due_date,
         "photos": db_task.photos
     }
-

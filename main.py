@@ -8,16 +8,24 @@ from fastapi.openapi.utils import get_openapi
 
 
 from api.get import users as get_users, sites as get_sites, tasks as get_tasks
+from api.get.tasks import task_id as get_tasks_id
+from api.get.tasks.task_id import site_id as get_tasks_id_site, title as get_tasks_id_title, description as get_tasks_id_description, status as get_tasks_id_status, priority as get_tasks_id_priority, assignee as get_tasks_id_assignee, due_date as get_tasks_id_due_date, photos as get_tasks_id_photos
 from api.get.auth import me as get_me
 
 from api.post import sites as post_sites, tasks as post_tasks, users as post_users
 from api.post.auth import login, register, change_password, logout
+from api.post.tasks.task_id import photos as post_tasks_id_photos
 
-from api.patch import users as patch_users, sites as patch_sites, tasks as patch_tasks
+from api.patch import users as patch_users, sites as patch_sites
+from api.patch.tasks import task_id as patch_tasks_id
 
-from api.delete import sites as delete_sites, tasks as delete_tasks, users as delete_users
+from api.delete import sites as delete_sites, users as delete_users
+from api.delete.tasks import task_id as delete_tasks_id
+from api.delete.tasks.task_id import assignee as delete_tasks_id_assignee, description as delete_tasks_id_description, due_date as delete_tasks_id_due_date, photos as delete_tasks_id_photos
+from api.delete.tasks.task_id.photos import photo_index as delete_tasks_id_photos_item
 
-from api.put import users as put_users, tasks as put_tasks, sites as put_sites
+from api.put import users as put_users, sites as put_sites
+from api.put.tasks.task_id import site_id as put_tasks_id_site, title as put_tasks_id_title, description as put_tasks_id_description, status as put_tasks_id_status, priority as put_tasks_id_priority, assignee as put_tasks_id_assignee, due_date as put_tasks_id_due_date
 
 
 app = FastAPI()
@@ -95,15 +103,36 @@ app.include_router(logout.router, prefix="/auth")
 app.include_router(get_users.router)
 app.include_router(get_sites.router)
 app.include_router(get_tasks.router)
+app.include_router(get_tasks_id.router)
+app.include_router(get_tasks_id_site.router)
+app.include_router(get_tasks_id_title.router)
+app.include_router(get_tasks_id_description.router)
+app.include_router(get_tasks_id_status.router)
+app.include_router(get_tasks_id_priority.router)
+app.include_router(get_tasks_id_assignee.router)
+app.include_router(get_tasks_id_due_date.router)
+app.include_router(get_tasks_id_photos.router)
 app.include_router(post_sites.router)
 app.include_router(post_tasks.router)
+app.include_router(post_tasks_id_photos.router)
 app.include_router(post_users.router)
 app.include_router(patch_users.router)
 app.include_router(patch_sites.router)
-app.include_router(patch_tasks.router)
+app.include_router(patch_tasks_id.router)
 app.include_router(delete_sites.router)
-app.include_router(delete_tasks.router)
+app.include_router(delete_tasks_id.router)
+app.include_router(delete_tasks_id_assignee.router)
+app.include_router(delete_tasks_id_description.router)
+app.include_router(delete_tasks_id_due_date.router)
+app.include_router(delete_tasks_id_photos.router)
+app.include_router(delete_tasks_id_photos_item.router)
 app.include_router(delete_users.router)
 app.include_router(put_users.router)
-app.include_router(put_tasks.router)
+app.include_router(put_tasks_id_site.router)
+app.include_router(put_tasks_id_title.router)
+app.include_router(put_tasks_id_description.router)
+app.include_router(put_tasks_id_status.router)
+app.include_router(put_tasks_id_priority.router)
+app.include_router(put_tasks_id_assignee.router)
+app.include_router(put_tasks_id_due_date.router)
 app.include_router(put_sites.router)
