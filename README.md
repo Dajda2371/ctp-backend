@@ -157,7 +157,8 @@ The project uses SQLite for storage. The database file is located at `data/data.
 - **PUT /tasks/{id}/priority**: Update priority. Body: `{"priority": 3}`
 - **PUT /tasks/{id}/assignee**: Update assignee. Body: `{"assignee": "..."}`
 - **PUT /tasks/{id}/due_date**: Update due date. Body: `{"due_date": "ISO-DATE"}`
-- **PATCH /tasks/{id}/photos**: Update photos array. Body: `["url1", "url2"]`
+- **POST /tasks/{id}/photos**: Add a photo. Body: `{"url": "..."}`
+- **DELETE /tasks/{id}/photos/{photo_index}**: Remove a photo by index.
 
 #### Task Field Queries (GET)
 - **GET /tasks/{id}/site_id**: Get site. Response: `{"site_id": "1"}`
