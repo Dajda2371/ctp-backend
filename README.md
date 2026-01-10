@@ -149,6 +149,16 @@ The project uses SQLite for storage. The database file is located at `data/data.
   - Body: `{ "site_id": 1, "title": "...", "description": "...", "status": "...", "priority": 3, "assignee": "...", "due_date": "ISO-DATE", "photos": [] }` (All fields optional)
 - **DELETE /tasks/{id}**: Delete a task. (Auth Required)
 
+#### Task Field Updates (PUT/PATCH)
+- **PUT /tasks/{id}/site_id**: Update site. Body: `{"site_id": 1}`
+- **PUT /tasks/{id}/title**: Update title. Body: `{"title": "..."}`
+- **PUT /tasks/{id}/description**: Update description. Body: `{"description": "..."}`
+- **PUT /tasks/{id}/status**: Update status. Body: `{"status": "..."}`
+- **PUT /tasks/{id}/priority**: Update priority. Body: `{"priority": 3}`
+- **PUT /tasks/{id}/assignee**: Update assignee. Body: `{"assignee": "..."}`
+- **PUT /tasks/{id}/due_date**: Update due date. Body: `{"due_date": "ISO-DATE"}`
+- **PATCH /tasks/{id}/photos**: Update photos array. Body: `["url1", "url2"]`
+
 ## Project Structure
 - `main.py`: Entry point of the FastAPI application.
 - `database.py`: SQLAlchemy database configuration.
