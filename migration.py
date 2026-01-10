@@ -44,11 +44,11 @@ def migrate_db():
 
         if "property_manager" not in columns:
             print("Migrating: Adding property_manager column to sites table")
-            cursor.execute("ALTER TABLE sites ADD COLUMN property_manager TEXT")
+            cursor.execute("ALTER TABLE sites ADD COLUMN property_manager INTEGER")
 
         if "facility_manager" not in columns:
             print("Migrating: Adding facility_manager column to sites table")
-            cursor.execute("ALTER TABLE sites ADD COLUMN facility_manager TEXT")
+            cursor.execute("ALTER TABLE sites ADD COLUMN facility_manager INTEGER")
             
         conn.commit()
     except Exception as e:

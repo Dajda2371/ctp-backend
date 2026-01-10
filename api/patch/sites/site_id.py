@@ -13,8 +13,8 @@ class SiteUpdate(BaseModel):
     address: Optional[str] = None
     latitude: Optional[float] = None
     longitude: Optional[float] = None
-    property_manager: Optional[str] = None
-    facility_manager: Optional[str] = None
+    property_manager: Optional[int] = None
+    facility_manager: Optional[int] = None
 
 @router.patch("/sites/{site_id}")
 async def update_site(
@@ -31,19 +31,19 @@ async def update_site(
     
     # Validate property_manager if provided
     if "property_manager" in update_data:
-        pm = db.query(models.User).filter(models.User.email == update_data["property_manager"]).first()
+        pm = db.query(models.User).filter(models.User.id == update_data["property_manager"]).first()
         if not pm:
-            raise HTTPException(status_code=404, detail=f"Property Manager with email {update_data['property_manager']} not found")
+            raise HTTPException(status_code=404, detail=f'Property Manager with ID "{update_data["property_manager"]}" not found')
         if pm.role not in ["property_manager", "admin"]:
-            raise HTTPException(status_code=400, detail=f"User {update_data['property_manager']} does not have the property_manager or admin role")
+            raise HTTPException(status_code=400, detail=f'User with ID "{update_data["property_manager"]}" does not have the property_manager or admin role')
 
     # Validate facility_manager if provided
     if "facility_manager" in update_data:
-        fm = db.query(models.User).filter(models.User.email == update_data["facility_manager"]).first()
+        fm = db.query(models.User).filter(models.User.id == update_data["facility_manager"]).first()
         if not fm:
-            raise HTTPException(status_code=404, detail=f"Facility Manager with email {update_data['facility_manager']} not found")
+            raise HTTPException(status_code=404, detail=f'Facility Manager with ID "{update_data["facility_manager"]}" not found')
         if fm.role not in ["facility_manager", "admin"]:
-            raise HTTPException(status_code=400, detail=f"User {update_data['facility_manager']} does not have the facility_manager or admin role")
+            raise HTTPException(status_code=400, detail=f'User with ID "{update_data["facility_manager"]}" does not have the facility_manager or admin role')
 
     for key, value in update_data.items():
         setattr(db_site, key, value)

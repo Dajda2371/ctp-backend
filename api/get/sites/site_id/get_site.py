@@ -12,7 +12,7 @@ async def get_site(site_id: int, db: Session = Depends(get_db), current_user: mo
     if not site:
         raise HTTPException(status_code=404, detail="Site not found")
     return {
-        "id": str(site.id),
+        "id": site.id,
         "name": site.name,
         "address": site.address,
         "latitude": site.latitude,

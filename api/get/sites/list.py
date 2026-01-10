@@ -11,7 +11,7 @@ async def get_sites(db: Session = Depends(get_db), current_user: models.User = D
     sites = db.query(models.Site).all()
     return [
         {
-            "id": str(site.id),
+            "id": site.id,
             "name": site.name,
             "address": site.address,
             "latitude": site.latitude,

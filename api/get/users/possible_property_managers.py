@@ -20,7 +20,7 @@ async def get_possible_property_managers(
     ).all()
     return [
         {
-            "id": str(user.id),
+            "id": user.id,
             "email": user.email,
             "name": user.name,
             "role": user.role

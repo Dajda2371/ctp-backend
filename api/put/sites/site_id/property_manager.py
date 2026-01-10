@@ -8,7 +8,7 @@ from auth_utils import get_current_user
 router = APIRouter()
 
 class SitePropertyManagerUpdate(BaseModel):
-    property_manager: str
+    property_manager: int
 
 @router.put("/sites/{site_id}/property_manager")
 async def update_site_property_manager(site_id: int, pm_update: SitePropertyManagerUpdate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
@@ -16,7 +16,7 @@ async def update_site_property_manager(site_id: int, pm_update: SitePropertyMana
     if not db_site:
         raise HTTPException(status_code=404, detail="Site not found")
     
-    pm = db.query(models.User).filter(models.User.email == pm_update.property_manager).first()
+    pm = db.query(models.User).filter(models.User.id == pm_update.property_manager).first()
     if not pm:
         raise HTTPException(status_code=404, detail="Property Manager not found")
     if pm.role not in ["property_manager", "admin"]:
