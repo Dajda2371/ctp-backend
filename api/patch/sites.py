@@ -4,14 +4,14 @@ from database import get_db
 import models
 from pydantic import BaseModel
 from auth_utils import get_current_user
-from typing import Optional
+from typing import Optional, Literal
 
 router = APIRouter()
 
 class SiteUpdate(BaseModel):
     name: Optional[str] = None
     address: Optional[str] = None
-    coordinator: Optional[str] = None
+    coordinator: Optional[Literal["admin", "property_manager", "facility_manager"]] = None
 
 @router.patch("/sites/{site_id}")
 async def update_site(

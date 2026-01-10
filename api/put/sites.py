@@ -4,7 +4,7 @@ from database import get_db
 import models
 from pydantic import BaseModel
 from auth_utils import get_current_user
-from typing import Optional
+from typing import Optional, Literal
 
 router = APIRouter()
 
@@ -15,7 +15,7 @@ class SiteAddressUpdate(BaseModel):
     address: str
 
 class SiteCoordinatorUpdate(BaseModel):
-    coordinator: Optional[str] = None
+    coordinator: Optional[Literal["admin", "property_manager", "facility_manager"]] = None
 
 @router.put("/sites/{site_id}/name")
 async def update_site_name(site_id: int, name_update: SiteNameUpdate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
