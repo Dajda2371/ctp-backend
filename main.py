@@ -1,10 +1,13 @@
 import os
 import models
 from database import engine
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.routing import APIRoute
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
+import logging
+import time
+from starlette.responses import Response
 
 
 from api.get import users as get_users, sites as get_sites, tasks as get_tasks
@@ -96,6 +99,40 @@ def custom_openapi():
 
 
 app.openapi = custom_openapi
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    # Log Request Body
+    body = await request.body()
+    if body:
+        logger.info(f"Request Body: {body.decode('utf-8', errors='ignore')}")
+    
+    # Replace the receive function so following handlers can read the body again
+    async def receive():
+        return {"type": "http.request", "body": body}
+    request._receive = receive
+
+    # Process request
+    response = await call_next(request)
+    
+    # Log Response Body
+    response_body = b""
+    async for chunk in response.body_iterator:
+        response_body += chunk
+    
+    if response_body:
+        logger.info(f"Response Body: {response_body.decode('utf-8', errors='ignore')}")
+    
+    # Since we consumed the response body, we must return a new response object
+    return Response(
+        content=response_body,
+        status_code=response.status_code,
+        headers=dict(response.headers),
+        media_type=response.media_type
+    )
 
 @app.on_event("startup")
 def configure_swagger_tags():
