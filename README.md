@@ -83,27 +83,37 @@ The project uses SQLite for storage. The database file is located at `data/data.
 - **Authentication**: Required (Bearer `token`)
 - **Response**: `{ "role": "..." }`
 
-#### 4. Update User Role
+#### 4. Get User Email
+- **Endpoint**: `GET /users/{id}/email`
+- **Authentication**: Required (Bearer `token`)
+- **Response**: `{ "email": "..." }`
+
+#### 5. Get User Name
+- **Endpoint**: `GET /users/{id}/name`
+- **Authentication**: Required (Bearer `token`)
+- **Response**: `{ "name": "..." }`
+
+#### 6. Update User Role
 - **Endpoint**: `PUT /users/{id}/role`
 - **Authentication**: Required (Bearer `token`)
 - **Body**: `{ "role": "admin" | "property_manager" | ... }`
 - **Response**: Updated user object.
 
-#### 5. Update User Name
+#### 7. Update User Name
 - **Endpoint**: `PUT /users/{id}/name`
 - **Authentication**: Required (Bearer `token`)
 - **Body**: `{ "name": "..." }`
 - **Response**: Updated user object.
 
-#### 6. Update User Email
+#### 8. Update User Email
 - **Endpoint**: `PUT /users/{id}/email`
 - **Authentication**: Required (Bearer `token`)
 - **Body**: `{ "email": "..." }`
 - **Response**: Updated user object.
 
-#### 3. Current User Role
+#### 9. Current User Context
 - **Endpoint**: `GET /auth/me`
-- **Authentication**: Required (Bearer `authenticated_access_token`)
+- **Authentication**: Required (Bearer `token`)
 - **Response**: User object for the current session.
 
 ### Role Permissions (Frontend Planning)

@@ -30,6 +30,20 @@ async def get_user(user_id: int, db: Session = Depends(get_db), current_user: mo
         "role": user.role
     }
 
+@router.get("/users/{user_id}/email")
+async def get_user_email(user_id: int, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {"email": user.email}
+
+@router.get("/users/{user_id}/name")
+async def get_user_name(user_id: int, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {"name": user.name}
+
 @router.get("/users/{user_id}/role")
 async def get_user_role(user_id: int, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
     user = db.query(models.User).filter(models.User.id == user_id).first()
