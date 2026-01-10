@@ -13,8 +13,6 @@ class UserUpdate(BaseModel):
     email: Optional[str] = None
     role: Optional[str] = None
 
-
-
 @router.patch("/users/{user_id}")
 async def update_user(
     user_id: int, 
@@ -50,5 +48,3 @@ async def update_user(
         "name": db_user.name,
         "role": db_user.role
     }
-
-
