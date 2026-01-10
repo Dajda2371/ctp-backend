@@ -19,8 +19,8 @@ async def update_site_facility_manager(site_id: int, fm_update: SiteFacilityMana
     fm = db.query(models.User).filter(models.User.email == fm_update.facility_manager).first()
     if not fm:
         raise HTTPException(status_code=404, detail="Facility Manager not found")
-    if fm.role != "facility_manager":
-        raise HTTPException(status_code=400, detail="User does not have the facility_manager role")
+    if fm.role not in ["facility_manager", "admin"]:
+        raise HTTPException(status_code=400, detail="User does not have the facility_manager or admin role")
 
     db_site.facility_manager = fm_update.facility_manager
     db.commit()

@@ -34,16 +34,16 @@ async def update_site(
         pm = db.query(models.User).filter(models.User.email == update_data["property_manager"]).first()
         if not pm:
             raise HTTPException(status_code=404, detail=f"Property Manager with email {update_data['property_manager']} not found")
-        if pm.role != "property_manager":
-            raise HTTPException(status_code=400, detail=f"User {update_data['property_manager']} does not have the property_manager role")
+        if pm.role not in ["property_manager", "admin"]:
+            raise HTTPException(status_code=400, detail=f"User {update_data['property_manager']} does not have the property_manager or admin role")
 
     # Validate facility_manager if provided
     if "facility_manager" in update_data:
         fm = db.query(models.User).filter(models.User.email == update_data["facility_manager"]).first()
         if not fm:
             raise HTTPException(status_code=404, detail=f"Facility Manager with email {update_data['facility_manager']} not found")
-        if fm.role != "facility_manager":
-            raise HTTPException(status_code=400, detail=f"User {update_data['facility_manager']} does not have the facility_manager role")
+        if fm.role not in ["facility_manager", "admin"]:
+            raise HTTPException(status_code=400, detail=f"User {update_data['facility_manager']} does not have the facility_manager or admin role")
 
     for key, value in update_data.items():
         setattr(db_site, key, value)

@@ -19,8 +19,8 @@ async def update_site_property_manager(site_id: int, pm_update: SitePropertyMana
     pm = db.query(models.User).filter(models.User.email == pm_update.property_manager).first()
     if not pm:
         raise HTTPException(status_code=404, detail="Property Manager not found")
-    if pm.role != "property_manager":
-        raise HTTPException(status_code=400, detail="User does not have the property_manager role")
+    if pm.role not in ["property_manager", "admin"]:
+        raise HTTPException(status_code=400, detail="User does not have the property_manager or admin role")
         
     db_site.property_manager = pm_update.property_manager
     db.commit()

@@ -22,15 +22,15 @@ async def create_site(site: SiteCreate, db: Session = Depends(get_db), current_u
     pm = db.query(models.User).filter(models.User.email == site.property_manager).first()
     if not pm:
         raise HTTPException(status_code=404, detail=f"Property Manager with email {site.property_manager} not found")
-    if pm.role != "property_manager":
-        raise HTTPException(status_code=400, detail=f"User {site.property_manager} does not have the property_manager role")
+    if pm.role not in ["property_manager", "admin"]:
+        raise HTTPException(status_code=400, detail=f"User {site.property_manager} does not have the property_manager or admin role")
 
     # Validate facility_manager exists and has the correct role
     fm = db.query(models.User).filter(models.User.email == site.facility_manager).first()
     if not fm:
         raise HTTPException(status_code=404, detail=f"Facility Manager with email {site.facility_manager} not found")
-    if fm.role != "facility_manager":
-        raise HTTPException(status_code=400, detail=f"User {site.facility_manager} does not have the facility_manager role")
+    if fm.role not in ["facility_manager", "admin"]:
+        raise HTTPException(status_code=400, detail=f"User {site.facility_manager} does not have the facility_manager or admin role")
 
     new_site = models.Site(
         name=site.name,
