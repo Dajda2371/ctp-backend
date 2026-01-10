@@ -8,11 +8,11 @@ from fastapi.openapi.utils import get_openapi
 
 
 from api.get import users as get_users, sites as get_sites, tasks as get_tasks
-from api.get.tasks import task_id as get_tasks_id_pkg
+from api.get.auth import me as get_me
+from api.get.tasks import task_id as get_tasks_id_pkg, my_tasks as get_tasks_my
 from api.get.tasks.task_id import get_task as get_tasks_id
 from api.get.tasks.task_id import site_id as get_tasks_id_site, title as get_tasks_id_title, description as get_tasks_id_description, status as get_tasks_id_status, priority as get_tasks_id_priority, assignee as get_tasks_id_assignee, due_date as get_tasks_id_due_date, photos as get_tasks_id_photos
 from api.get.tasks.task_id.photos import photo_index as get_tasks_id_photos_item
-from api.get.auth import me as get_me
 
 from api.post import sites as post_sites, tasks as post_tasks, users as post_users
 from api.post.auth import login, register, change_password, logout
@@ -23,8 +23,7 @@ from api.patch.tasks import task_id as patch_tasks_id
 
 from api.delete import sites as delete_sites, users as delete_users
 from api.delete.tasks import task_id as delete_tasks_id_pkg
-from api.delete.tasks.task_id import delete_task as delete_tasks_id
-from api.delete.tasks.task_id import assignee as delete_tasks_id_assignee, description as delete_tasks_id_description, due_date as delete_tasks_id_due_date, photos as delete_tasks_id_photos
+from api.delete.tasks.task_id import delete_task as delete_tasks_id, assignee as delete_tasks_id_assignee, description as delete_tasks_id_description, due_date as delete_tasks_id_due_date, photos as delete_tasks_id_photos
 from api.delete.tasks.task_id.photos import photo_index as delete_tasks_id_photos_item
 
 from api.put import users as put_users, sites as put_sites
@@ -108,6 +107,7 @@ app.include_router(logout.router, prefix="/auth")
 app.include_router(get_users.router)
 app.include_router(get_sites.router)
 app.include_router(get_tasks.router)
+app.include_router(get_tasks_my.router)
 app.include_router(get_tasks_id.router)
 app.include_router(get_tasks_id_site.router)
 app.include_router(get_tasks_id_title.router)
