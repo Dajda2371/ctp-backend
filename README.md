@@ -139,6 +139,16 @@ The project uses SQLite for storage. The database file is located at `data/data.
 - **DELETE /sites/{id}**: Delete a site. (Auth Required)
   - Note: Site cannot be deleted if it has associated tasks.
 
+#### Site Field Updates (PUT)
+- **PUT /sites/{id}/name**: Update name. Body: `{"name": "..."}`
+- **PUT /sites/{id}/address**: Update address. Body: `{"address": "..."}`
+- **PUT /sites/{id}/coordinator**: Update coordinator. Body: `{"coordinator": "..."}`
+
+#### Site Field Queries (GET)
+- **GET /sites/{id}/name**: Get name. Response: `{"name": "..."}`
+- **GET /sites/{id}/address**: Get address. Response: `{"address": "..."}`
+- **GET /sites/{id}/coordinator**: Get coordinator. Response: `{"coordinator": "..."}`
+
 ### Tasks
 - **GET /tasks**: List all tasks. Supports filtering by `site_id` and `status`. (Auth Required)
 - **GET /tasks/{id}**: Get task details. (Auth Required)
