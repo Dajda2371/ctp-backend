@@ -86,6 +86,8 @@ app.openapi = custom_openapi
 
 @app.on_event("startup")
 def configure_swagger_tags():
+    from migration import migrate_db
+    migrate_db()
     use_first_path_segment_as_tag(app)
 
 # Create the database tables
