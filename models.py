@@ -36,6 +36,8 @@ class Task(Base):
     assignee = Column(String) # For now, simple string or FK to users.name
     created_at = Column(DateTime, default=datetime.utcnow)
     due_date = Column(DateTime, nullable=True)
+    latitude = Column(Float, nullable=True)
+    longitude = Column(Float, nullable=True)
     photos = Column(JSON, default=[])
 
     site = relationship("Site", back_populates="tasks")

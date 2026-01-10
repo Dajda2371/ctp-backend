@@ -17,6 +17,8 @@ class TaskCreate(BaseModel):
     priority: Optional[int] = 3
     assignee: Optional[str] = None
     due_date: Optional[datetime] = None
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
     photos: Optional[List[str]] = None
 
 @router.post("/tasks")
@@ -37,6 +39,8 @@ async def create_task(task: TaskCreate, db: Session = Depends(get_db), current_u
         priority=task.priority,
         assignee=task.assignee,
         due_date=task.due_date,
+        latitude=task.latitude,
+        longitude=task.longitude,
         photos=task.photos
     )
     db.add(new_task)
@@ -52,5 +56,7 @@ async def create_task(task: TaskCreate, db: Session = Depends(get_db), current_u
         "assignee": new_task.assignee,
         "created_at": new_task.created_at,
         "due_date": new_task.due_date,
+        "latitude": new_task.latitude,
+        "longitude": new_task.longitude,
         "photos": new_task.photos
     }

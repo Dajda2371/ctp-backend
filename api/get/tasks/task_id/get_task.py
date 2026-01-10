@@ -21,5 +21,7 @@ async def get_task(task_id: int, db: Session = Depends(get_db), current_user: mo
         "assignee": task.assignee,
         "created_at": task.created_at,
         "due_date": task.due_date,
+        "latitude": task.latitude,
+        "longitude": task.longitude,
         "photos": task.photos
     }

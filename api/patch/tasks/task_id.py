@@ -17,6 +17,8 @@ class TaskUpdate(BaseModel):
     priority: Optional[int] = None
     assignee: Optional[str] = None
     due_date: Optional[datetime] = None
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
     photos: Optional[List[str]] = None
 
 @router.patch("/tasks/{task_id}")
@@ -58,5 +60,7 @@ async def update_task(
         "assignee": db_task.assignee,
         "created_at": db_task.created_at,
         "due_date": db_task.due_date,
+        "latitude": db_task.latitude,
+        "longitude": db_task.longitude,
         "photos": db_task.photos
     }

@@ -17,6 +17,14 @@ def migrate_db():
         if "due_date" not in columns:
             print("Migrating: Adding due_date column to tasks table")
             cursor.execute("ALTER TABLE tasks ADD COLUMN due_date DATETIME")
+
+        if "latitude" not in columns:
+            print("Migrating: Adding latitude column to tasks table")
+            cursor.execute("ALTER TABLE tasks ADD COLUMN latitude FLOAT")
+
+        if "longitude" not in columns:
+            print("Migrating: Adding longitude column to tasks table")
+            cursor.execute("ALTER TABLE tasks ADD COLUMN longitude FLOAT")
             
         if "photos" not in columns:
             print("Migrating: Adding photos column to tasks table")

@@ -32,6 +32,8 @@ async def get_my_tasks(
             "assignee": task.assignee,
             "created_at": task.created_at,
             "due_date": task.due_date,
+            "latitude": task.latitude,
+            "longitude": task.longitude,
             "photos": task.photos
         } for task in tasks
     ]
