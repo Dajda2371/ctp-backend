@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, JSON, Float
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, JSON, Float, LargeBinary
 from sqlalchemy.orm import relationship
 from database import Base
 from datetime import datetime
@@ -39,9 +39,22 @@ class Task(Base):
     due_date = Column(DateTime, nullable=True)
     latitude = Column(Float, nullable=True)
     longitude = Column(Float, nullable=True)
-    photos = Column(JSON, default=[])
+    photos = Column(JSON, default=[]) # Keeping for backward compatibility or metadata
 
     site = relationship("Site", back_populates="tasks")
+    task_photos = relationship("TaskPhoto", back_populates="task", cascade="all, delete-orphan")
+
+class TaskPhoto(Base):
+    __tablename__ = "task_photos"
+
+    id = Column(Integer, primary_key=True, index=True)
+    task_id = Column(Integer, ForeignKey("tasks.id"))
+    filename = Column(String)
+    content = Column(LargeBinary)
+    mime_type = Column(String)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    task = relationship("Task", back_populates="task_photos")
 
 class BlacklistedToken(Base):
     __tablename__ = "blacklisted_tokens"

@@ -50,6 +50,22 @@ def migrate_db():
             print("Migrating: Adding facility_manager column to sites table")
             cursor.execute("ALTER TABLE sites ADD COLUMN facility_manager INTEGER")
             
+        # Create task_photos table
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='task_photos'")
+        if not cursor.fetchone():
+            print("Migrating: Creating task_photos table")
+            cursor.execute("""
+                CREATE TABLE task_photos (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    task_id INTEGER,
+                    filename TEXT,
+                    content BLOB,
+                    mime_type TEXT,
+                    created_at DATETIME,
+                    FOREIGN KEY (task_id) REFERENCES tasks(id)
+                )
+            """)
+            
         conn.commit()
     except Exception as e:
         print(f"Migration error: {e}")

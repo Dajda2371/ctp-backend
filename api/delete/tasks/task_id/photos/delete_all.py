@@ -11,7 +11,8 @@ async def delete_task_photos(task_id: int, db: Session = Depends(get_db), curren
     db_task = db.query(models.Task).filter(models.Task.id == task_id).first()
     if not db_task:
         raise HTTPException(status_code=404, detail="Task not found")
+    
+    db.query(models.TaskPhoto).filter(models.TaskPhoto.task_id == task_id).delete()
     db_task.photos = []
     db.commit()
-    db.refresh(db_task)
-    return db_task
+    return {"detail": "All photos for the task deleted"}
