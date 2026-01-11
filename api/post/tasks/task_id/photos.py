@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, File, UploadFile
+from fastapi import APIRouter, Depends, HTTPException, File, UploadFile, Request
 from sqlalchemy.orm import Session
 from database import get_db
 import models
@@ -14,25 +14,28 @@ logger = logging.getLogger("main")
 @router.post("/tasks/{task_id}/photos")
 async def add_task_photos(
     task_id: int, 
-    files_list: List[UploadFile] = File(None, alias="files"),
-    single_file: UploadFile = File(None, alias="file"),
+    request: Request,
     db: Session = Depends(get_db), 
     current_user: models.User = Depends(get_current_user)
 ):
     logger.info(f"Received photo upload request for task {task_id}")
     
-    # Combine inputs into a single list
+    form = await request.form()
     files = []
-    if files_list:
-        files.extend(files_list)
-    if single_file:
-        files.append(single_file)
     
+    # Iterate over all form fields to find files
+    for key, value in form.multi_items():
+        if isinstance(value, UploadFile):
+            files.append(value)
+            logger.info(f"Found file in field '{key}': {value.filename}")
+
     logger.info(f"Number of files processed: {len(files)}")
 
     if not files:
          logger.error("No files found in request")
-         raise HTTPException(status_code=422, detail="No files provided. Send fields named 'file' or 'files'.")
+         # Log available keys to help debugging
+         logger.info(f"Form keys received: {list(form.keys())}")
+         raise HTTPException(status_code=422, detail="No files provided. Send form-data with any file field.")
 
     db_task = db.query(models.Task).filter(models.Task.id == task_id).first()
     if not db_task:
