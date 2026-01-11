@@ -246,6 +246,20 @@ app.include_router(put_users_id_role.router)
 app.include_router(put_users_id_name.router)
 app.include_router(put_users_id_email.router)
 app.include_router(put_tasks_id_site.router)
+from api.post.chat.groups import create as post_chat_groups
+from api.get.chat.groups import list as get_chat_groups
+from api.post.chat.messages import send as post_chat_messages
+from api.get.chat.messages import list as get_chat_messages
+from api.post.chat.files import create as post_chat_files
+from api.get.chat.files import serve as get_chat_files
+
+app.include_router(post_chat_groups.router)
+app.include_router(get_chat_groups.router)
+app.include_router(post_chat_messages.router)
+app.include_router(get_chat_messages.router)
+app.include_router(post_chat_files.router)
+app.include_router(get_chat_files.router)
+
 app.include_router(put_tasks_id_title.router)
 app.include_router(put_tasks_id_description.router)
 app.include_router(put_tasks_id_status.router)

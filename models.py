@@ -56,6 +56,53 @@ class TaskPhoto(Base):
 
     task = relationship("Task", back_populates="task_photos")
 
+class ChatGroup(Base):
+    __tablename__ = "chat_groups"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=True) # Null for DMs
+    is_group = Column(Integer, default=0) # 0 for DM, 1 for Group
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    members = relationship("ChatMember", back_populates="group")
+    messages = relationship("ChatMessage", back_populates="group")
+
+class ChatMember(Base):
+    __tablename__ = "chat_members"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    group_id = Column(Integer, ForeignKey("chat_groups.id"))
+    user_id = Column(Integer, ForeignKey("users.id"))
+    joined_at = Column(DateTime, default=datetime.utcnow)
+    
+    group = relationship("ChatGroup", back_populates="members")
+    user = relationship("User")
+
+class ChatMessage(Base):
+    __tablename__ = "chat_messages"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    group_id = Column(Integer, ForeignKey("chat_groups.id"))
+    sender_id = Column(Integer, ForeignKey("users.id"))
+    content = Column(String)
+    sent_at = Column(DateTime, default=datetime.utcnow)
+    
+    group = relationship("ChatGroup", back_populates="messages")
+    sender = relationship("User")
+    files = relationship("ChatFile", back_populates="message")
+
+class ChatFile(Base):
+    __tablename__ = "chat_files"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    message_id = Column(Integer, ForeignKey("chat_messages.id"))
+    filename = Column(String)
+    content = Column(LargeBinary)
+    mime_type = Column(String)
+    uploaded_at = Column(DateTime, default=datetime.utcnow)
+    
+    message = relationship("ChatMessage", back_populates="files")
+
 class BlacklistedToken(Base):
     __tablename__ = "blacklisted_tokens"
     token = Column(String, primary_key=True, index=True)

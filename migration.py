@@ -65,6 +65,63 @@ def migrate_db():
                     FOREIGN KEY (task_id) REFERENCES tasks(id)
                 )
             """)
+
+        # Create chat tables
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='chat_groups'")
+        if not cursor.fetchone():
+            print("Migrating: Creating chat_groups table")
+            cursor.execute("""
+                CREATE TABLE chat_groups (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name TEXT,
+                    is_group INTEGER DEFAULT 0,
+                    created_at DATETIME
+                )
+            """)
+
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='chat_members'")
+        if not cursor.fetchone():
+            print("Migrating: Creating chat_members table")
+            cursor.execute("""
+                CREATE TABLE chat_members (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    group_id INTEGER,
+                    user_id INTEGER,
+                    joined_at DATETIME,
+                    FOREIGN KEY (group_id) REFERENCES chat_groups(id),
+                    FOREIGN KEY (user_id) REFERENCES users(id)
+                )
+            """)
+
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='chat_messages'")
+        if not cursor.fetchone():
+            print("Migrating: Creating chat_messages table")
+            cursor.execute("""
+                CREATE TABLE chat_messages (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    group_id INTEGER,
+                    sender_id INTEGER,
+                    content TEXT,
+                    sent_at DATETIME,
+                    FOREIGN KEY (group_id) REFERENCES chat_groups(id),
+                    FOREIGN KEY (sender_id) REFERENCES users(id)
+                )
+            """)
+
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='chat_files'")
+        if not cursor.fetchone():
+            print("Migrating: Creating chat_files table")
+            cursor.execute("""
+                CREATE TABLE chat_files (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    message_id INTEGER,
+                    filename TEXT,
+                    content BLOB,
+                    mime_type TEXT,
+                    uploaded_at DATETIME,
+                    FOREIGN KEY (message_id) REFERENCES chat_messages(id)
+                )
+            """)
             
         conn.commit()
     except Exception as e:
