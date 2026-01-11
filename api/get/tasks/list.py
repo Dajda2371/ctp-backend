@@ -21,10 +21,12 @@ async def get_tasks(
         query = query.filter(models.Task.status == status)
     
     tasks = query.all()
-    return [
-        {
-            "id": str(task.id),
-            "site_id": str(task.site_id),
+    result = []
+    for task in tasks:
+        task_photos = db.query(models.TaskPhoto).filter(models.TaskPhoto.task_id == task.id).all()
+        result.append({
+            "id": task.id,
+            "site_id": task.site_id,
             "title": task.title,
             "description": task.description,
             "status": task.status,
@@ -34,6 +36,13 @@ async def get_tasks(
             "due_date": task.due_date,
             "latitude": task.latitude,
             "longitude": task.longitude,
-            "photos": task.photos
-        } for task in tasks
-    ]
+            "photos": [
+                {
+                    "id": p.id,
+                    "filename": p.filename,
+                    "mime_type": p.mime_type,
+                    "url": f"/tasks/{task.id}/photos/{p.id}"
+                } for p in task_photos
+            ]
+        })
+    return result

@@ -47,8 +47,8 @@ async def create_task(task: TaskCreate, db: Session = Depends(get_db), current_u
     db.commit()
     db.refresh(new_task)
     return {
-        "id": str(new_task.id),
-        "site_id": str(new_task.site_id),
+        "id": new_task.id,
+        "site_id": new_task.site_id,
         "title": new_task.title,
         "description": new_task.description,
         "status": new_task.status,
@@ -58,5 +58,5 @@ async def create_task(task: TaskCreate, db: Session = Depends(get_db), current_u
         "due_date": new_task.due_date,
         "latitude": new_task.latitude,
         "longitude": new_task.longitude,
-        "photos": new_task.photos
+        "photos": new_task.photos or []
     }
