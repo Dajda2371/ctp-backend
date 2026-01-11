@@ -173,6 +173,7 @@ async def log_requests(request: Request, call_next):
         status_code=response.status_code,
         headers=dict(response.headers),
         media_type=response.media_type
+    )
 
 @app.on_event("startup")
 def configure_swagger_tags():
