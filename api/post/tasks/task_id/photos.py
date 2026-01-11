@@ -10,10 +10,20 @@ router = APIRouter()
 @router.post("/tasks/{task_id}/photos")
 async def add_task_photos(
     task_id: int, 
-    files: List[UploadFile] = File(..., alias="file"), 
+    files_list: List[UploadFile] = File(None, alias="files"),
+    single_file: UploadFile = File(None, alias="file"),
     db: Session = Depends(get_db), 
     current_user: models.User = Depends(get_current_user)
 ):
+    # Combine inputs into a single list
+    files = []
+    if files_list:
+        files.extend(files_list)
+    if single_file:
+        files.append(single_file)
+    
+    if not files:
+         raise HTTPException(status_code=422, detail="No files provided. Send fields named 'file' or 'files'.")
     db_task = db.query(models.Task).filter(models.Task.id == task_id).first()
     if not db_task:
         raise HTTPException(status_code=404, detail="Task not found")
