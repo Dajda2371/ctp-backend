@@ -10,7 +10,7 @@ router = APIRouter()
 @router.post("/tasks/{task_id}/photos")
 async def add_task_photos(
     task_id: int, 
-    files: List[UploadFile] = File(...), 
+    files: List[UploadFile] = File(..., alias="file"), 
     db: Session = Depends(get_db), 
     current_user: models.User = Depends(get_current_user)
 ):
