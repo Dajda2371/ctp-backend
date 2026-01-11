@@ -21,6 +21,7 @@ class TaskUpdate(BaseModel):
     longitude: Optional[float] = None
     photos: Optional[List[str]] = None
 
+@router.put("/tasks/{task_id}")
 @router.patch("/tasks/{task_id}")
 async def update_task(
     task_id: int, 
@@ -51,8 +52,8 @@ async def update_task(
     db.refresh(db_task)
     
     return {
-        "id": str(db_task.id),
-        "site_id": str(db_task.site_id),
+        "id": db_task.id,
+        "site_id": db_task.site_id,
         "title": db_task.title,
         "description": db_task.description,
         "status": db_task.status,
@@ -62,5 +63,5 @@ async def update_task(
         "due_date": db_task.due_date,
         "latitude": db_task.latitude,
         "longitude": db_task.longitude,
-        "photos": db_task.photos
+        "photos": db_task.photos or []
     }
