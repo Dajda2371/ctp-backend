@@ -109,65 +109,70 @@ logging.getLogger("uvicorn.access").setLevel(logging.WARNING)
 
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
-    # Log Request Body
-    body = await request.body()
+    # Determine if we should skip body logging (for binary data or photo endpoints)
+    content_type = request.headers.get("content-type", "")
+    is_binary_request = "multipart" in content_type or "image" in content_type
+    is_photo_path = "/photos" in request.url.path
+
+    body = b""
+    if not (is_binary_request or is_photo_path):
+        # Only read body for small, non-binary requests
+        body = await request.body()
     
     # Replace the receive function so following handlers can read the body again
     async def receive():
         return {"type": "http.request", "body": body}
-    request._receive = receive
+    
+    if not (is_binary_request or is_photo_path):
+        request._receive = receive
 
     # Process request
     response = await call_next(request)
     
-    # Log Response Body
-    response_body = b""
-    async for chunk in response.body_iterator:
-        response_body += chunk
-    
-    # Define colors
-    COLOR_RESET = "\033[0m"
-    COLOR_METHOD = "\033[94m"  # Blue
-    COLOR_PATH = "\033[97m"    # White
-    
-    status_code = response.status_code
-    if status_code < 300:
-        COLOR_STATUS = "\033[92m"  # Green
-    elif status_code < 400:
-        COLOR_STATUS = "\033[93m"  # Yellow
-    else:
-        COLOR_STATUS = "\033[91m"  # Red
-
     # Log Request Line
+    status_code = response.status_code
     try:
         status_phrase = http.HTTPStatus(status_code).phrase
     except ValueError:
         status_phrase = ""
     
+    COLOR_RESET = "\033[0m"
+    COLOR_METHOD = "\033[94m"
+    COLOR_PATH = "\033[97m"
+    COLOR_STATUS = "\033[92m" if status_code < 300 else "\033[93m" if status_code < 400 else "\033[91m"
+    
     client_host = request.client.host if request.client else "unknown"
     client_port = request.client.port if request.client else "0"
-    
-    relative_path = request.url.path
-    if request.url.query:
-        relative_path += f"?{request.url.query}"
+    relative_path = request.url.path + (f"?{request.url.query}" if request.url.query else "")
     
     logger.info(f"{client_host}:{client_port} - \"{COLOR_METHOD}{request.method}{COLOR_RESET} {COLOR_PATH}{relative_path}{COLOR_RESET} HTTP/{request.scope.get('http_version', '1.1')}\" {COLOR_STATUS}{status_code} {status_phrase}{COLOR_RESET}")
 
-    # Log Request Body (always log, even if empty)
-    request_body_str = body.decode('utf-8', errors='ignore') if body else "<no request body>"
-    logger.info(f"{request_body_str}")
+    # Log Request Body
+    if not (is_binary_request or is_photo_path):
+        request_body_str = body.decode('utf-8', errors='ignore') if body else "<no request body>"
+        logger.info(f"{request_body_str}")
+    else:
+        logger.info(f"<binary or multipart data omitted from log>")
+
+    # Handle Response Body logging (Skip for photos/binary to prevent freezing)
+    response_content_type = response.headers.get("content-type", "")
+    if "image" in response_content_type or is_photo_path:
+        logger.info(f"Response Body: <binary photo content omitted from log>")
+        return response
     
-    # Log Response Body
-    response_body_str = response_body.decode('utf-8', errors='ignore') if response_body else "<no response body>"
-    logger.info(f"Response Body: {response_body_str}")
+    # For normal JSON/Text responses, we still log the body
+    response_body = b""
+    async for chunk in response.body_iterator:
+        response_body += chunk
     
-    # Since we consumed the response body, we must return a new response object
+    if response_body:
+        logger.info(f"Response Body: {response_body.decode('utf-8', errors='ignore')}")
+    
     return Response(
         content=response_body,
         status_code=response.status_code,
         headers=dict(response.headers),
         media_type=response.media_type
-    )
 
 @app.on_event("startup")
 def configure_swagger_tags():
