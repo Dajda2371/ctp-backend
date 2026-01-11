@@ -260,15 +260,31 @@ app.include_router(get_chat_messages.router)
 app.include_router(post_chat_files.router)
 app.include_router(get_chat_files.router)
 
-from api.put.planner import settings as put_planner_settings
+from api.patch.planner import settings as patch_planner_settings
 from api.post.planner import events as post_planner_events
 from api.get.planner import events as get_planner_events
 from api.delete.planner import events as delete_planner_events
 
-app.include_router(put_planner_settings.router)
+from api.put.planner.settings import start_time as put_planner_start_time
+from api.put.planner.settings import end_time as put_planner_end_time
+from api.put.planner.settings import work_days as put_planner_work_days
+
+from api.get.planner.settings import start_time as get_planner_start_time
+from api.get.planner.settings import end_time as get_planner_end_time
+from api.get.planner.settings import work_days as get_planner_work_days
+
+app.include_router(patch_planner_settings.router)
 app.include_router(post_planner_events.router)
 app.include_router(get_planner_events.router)
 app.include_router(delete_planner_events.router)
+
+app.include_router(put_planner_start_time.router)
+app.include_router(put_planner_end_time.router)
+app.include_router(put_planner_work_days.router)
+
+app.include_router(get_planner_start_time.router)
+app.include_router(get_planner_end_time.router)
+app.include_router(get_planner_work_days.router)
 
 app.include_router(put_tasks_id_title.router)
 app.include_router(put_tasks_id_description.router)

@@ -4,13 +4,14 @@ from database import get_db
 import models
 from auth_utils import get_current_user
 from pydantic import BaseModel
+from typing import Optional
 
 router = APIRouter()
 
 class SettingsUpdate(BaseModel):
-    start_time: str
-    end_time: str
-    work_days: str
+    start_time: Optional[str] = None
+    end_time: Optional[str] = None
+    work_days: Optional[str] = None
 
 @router.get("/planner/settings")
 async def get_planner_settings(
@@ -31,7 +32,7 @@ async def get_planner_settings(
         "work_days": settings.work_days
     }
 
-@router.put("/planner/settings")
+@router.patch("/planner/settings")
 async def update_planner_settings(
     update: SettingsUpdate,
     db: Session = Depends(get_db), 
@@ -42,9 +43,12 @@ async def update_planner_settings(
         settings = models.PlannerSettings(user_id=current_user.id)
         db.add(settings)
     
-    settings.start_time = update.start_time
-    settings.end_time = update.end_time
-    settings.work_days = update.work_days
+    if update.start_time is not None:
+        settings.start_time = update.start_time
+    if update.end_time is not None:
+        settings.end_time = update.end_time
+    if update.work_days is not None:
+        settings.work_days = update.work_days
     
     db.commit()
     db.refresh(settings)
