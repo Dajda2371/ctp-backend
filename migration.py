@@ -122,6 +122,39 @@ def migrate_db():
                     FOREIGN KEY (message_id) REFERENCES chat_messages(id)
                 )
             """)
+
+        # Sidebar: Create planner tables
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='planner_settings'")
+        if not cursor.fetchone():
+            print("Migrating: Creating planner_settings table")
+            cursor.execute("""
+                CREATE TABLE planner_settings (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER UNIQUE,
+                    start_time TEXT DEFAULT '09:00',
+                    end_time TEXT DEFAULT '17:00',
+                    work_days TEXT DEFAULT '0,1,2,3,4',
+                    FOREIGN KEY (user_id) REFERENCES users(id)
+                )
+            """)
+
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='planner_events'")
+        if not cursor.fetchone():
+            print("Migrating: Creating planner_events table")
+            cursor.execute("""
+                CREATE TABLE planner_events (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER,
+                    task_id INTEGER,
+                    start_datetime DATETIME,
+                    end_datetime DATETIME,
+                    event_type TEXT,
+                    title TEXT,
+                    description TEXT,
+                    FOREIGN KEY (user_id) REFERENCES users(id),
+                    FOREIGN KEY (task_id) REFERENCES tasks(id)
+                )
+            """)
             
         conn.commit()
     except Exception as e:

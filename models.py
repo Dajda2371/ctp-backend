@@ -103,6 +103,32 @@ class ChatFile(Base):
     
     message = relationship("ChatMessage", back_populates="files")
 
+class PlannerSettings(Base):
+    __tablename__ = "planner_settings"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), unique=True)
+    start_time = Column(String, default="09:00")
+    end_time = Column(String, default="17:00")
+    work_days = Column(String, default="0,1,2,3,4") # 0=Mon, 6=Sun
+    
+    user = relationship("User")
+
+class PlannerEvent(Base):
+    __tablename__ = "planner_events"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    task_id = Column(Integer, ForeignKey("tasks.id"), nullable=True)
+    start_datetime = Column(DateTime)
+    end_datetime = Column(DateTime)
+    event_type = Column(String) # 'work', 'time_off', 'task'
+    title = Column(String, nullable=True)
+    description = Column(String, nullable=True)
+    
+    user = relationship("User")
+    task = relationship("Task")
+
 class BlacklistedToken(Base):
     __tablename__ = "blacklisted_tokens"
     token = Column(String, primary_key=True, index=True)

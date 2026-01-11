@@ -260,6 +260,16 @@ app.include_router(get_chat_messages.router)
 app.include_router(post_chat_files.router)
 app.include_router(get_chat_files.router)
 
+from api.put.planner import settings as put_planner_settings
+from api.post.planner import events as post_planner_events
+from api.get.planner import events as get_planner_events
+from api.delete.planner import events as delete_planner_events
+
+app.include_router(put_planner_settings.router)
+app.include_router(post_planner_events.router)
+app.include_router(get_planner_events.router)
+app.include_router(delete_planner_events.router)
+
 app.include_router(put_tasks_id_title.router)
 app.include_router(put_tasks_id_description.router)
 app.include_router(put_tasks_id_status.router)
